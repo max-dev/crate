@@ -267,8 +267,8 @@ public class PlannerTest {
         assertThat(mergeNode.numUpstreams(), is(2));
         assertThat(mergeNode.executionNodes().size(), is(2));
         assertEquals(mergeNode.inputTypes(), collectNode.outputTypes());
-        assertThat(mergeNode.projections().size(), is(1));
-        assertThat(mergeNode.projections().get(0), instanceOf(GroupProjection.class));
+        assertThat(mergeNode.projections().size(), is(2)); // for the default limit there is always a TopNProjection
+        assertThat(mergeNode.projections().get(1), instanceOf(TopNProjection.class));
 
         assertThat(mergeNode.projections().get(0), instanceOf(GroupProjection.class));
         GroupProjection groupProjection = (GroupProjection) mergeNode.projections().get(0);
