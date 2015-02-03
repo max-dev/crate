@@ -5,6 +5,9 @@ from crate.testing.layer import CrateLayer
 import os
 import shutil
 import re
+import json
+import urllib3
+import six
 import process_test
 from .paths import crate_path, project_path
 from .ports import random_available_port
@@ -27,6 +30,28 @@ def wait_for_schema_update(schema, table, column):
                     'and column_name = ?'),
                     (schema, table, column))
         count = c.fetchone()[0]
+
+def ensureYellow():
+    ensureState('yellow')
+
+def ensureState(state):
+    http = urllib3.PoolManager()
+    r = http.request('GET',
+        'http://localhost:{0}/_cluster/health?wait_for_status={1}&timeout=10s'
+            .format(CRATE_HTTP_PORT, state))
+    if len(r.data) > 0:
+        try:
+            json_data = json.loads(six.text_type(r.data, 'utf-8'))
+            if json_data['status'] != state:
+                raise Exception(
+                    "Responded status {0} is not equal to expected {1}"
+                        .format(json_data['status'], state))
+        except ValueError:
+            raise Exception(
+                "Invalid server response of content-type '%s'" %
+                r.headers.get("content-type", ""))
+    else:
+        raise Exception("No valid server response {0}".format(r))
 
 
 def bash_transform(s):
@@ -73,7 +98,7 @@ empty_layer = ConnectingCrateLayer('crate',
 
 
 def setUpLocations(test):
-    test.globs['cmd'] = cmd
+    setUp(test)
 
     cmd.onecmd("""
         create table locations (
@@ -100,7 +125,7 @@ def setUpLocations(test):
 
 
 def setUpUserVisits(test):
-    test.globs['cmd'] = cmd
+    setUp(test)
     cmd.onecmd("""
         create table uservisits(
           id integer primary key,
@@ -115,7 +140,7 @@ def setUpUserVisits(test):
 
 
 def setUpQuotes(test):
-    test.globs['cmd'] = cmd
+    setUp(test)
     cmd.onecmd("""
         create table quotes (
           id integer primary key,
@@ -157,6 +182,7 @@ def setUpTutorials(test):
 def setUp(test):
     test.globs['cmd'] = cmd
     test.globs['wait_for_schema_update'] = wait_for_schema_update
+    test.globs['ensureYellow'] = ensureYellow
 
 
 def tearDownDropQuotes(test):
