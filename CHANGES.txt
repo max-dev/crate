@@ -5,6 +5,27 @@ Changes for Crate
 Unreleased
 ==========
 
+ - Updated crash version to 0.11.1 which contains following changes:
+
+    - added ``--format`` command line option
+      to support different response output formats such as
+      ``tabular``, ``raw``, ``json``, ``csv`` and ``mixed``
+
+    - BREAKING CHANGE
+      the ``CONNECT <host>`` client command was changed to ``\connect <host>``
+      see documentation for further details
+
+    - alternative cli implementation using prompt_toolkit
+
+    - added coloured printing when in interactive shell
+
+ - Fix: Filtering on a routing column sometimes didn't work if the value was an
+   empty string
+
+ - Fix: Bulk inserts with mixed but compatible types (e.g. int and long) failed
+
+ - Fix: Force UTF8 encoding in file reading collector to avoid JVM's default encoding settings
+
  - Added support for the ``std_dev``, ``variance`` and ``geometric_mean``
    aggregation functions
 
