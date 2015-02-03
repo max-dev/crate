@@ -82,7 +82,7 @@ public class ColumnPolicyIntegrationTest extends SQLTransportIntegrationTest {
                 "  id integer primary key, " +
                 "  name string" +
                 ") with (column_policy='strict', number_of_replicas=0)");
-        ensureGreen();
+        ensureYellow();
         execute("insert into strict_table (id, name) values (1, 'Ford')");
         execute("refresh table strict_table");
 
@@ -102,7 +102,7 @@ public class ColumnPolicyIntegrationTest extends SQLTransportIntegrationTest {
                 "  id integer primary key, " +
                 "  name string" +
                 ") with (column_policy='strict', number_of_replicas=0)");
-        ensureGreen();
+        ensureYellow();
         execute("insert into strict_table (id, name) values (1, 'Ford')");
         execute("refresh table strict_table");
 
@@ -119,7 +119,7 @@ public class ColumnPolicyIntegrationTest extends SQLTransportIntegrationTest {
     @Test
     public void testCopyFromFileStrictTable() throws Exception {
         execute("create table quotes (id int primary key) with (column_policy='strict', number_of_replicas = 0)");
-        ensureGreen();
+        ensureYellow();
 
         String filePath = Joiner.on(File.separator).join(copyFilePath, "test_copy_from.json");
 
@@ -133,7 +133,7 @@ public class ColumnPolicyIntegrationTest extends SQLTransportIntegrationTest {
                 "  id integer primary key, " +
                 "  name string" +
                 ") with (column_policy='dynamic', number_of_replicas=0)");
-        ensureGreen();
+        ensureYellow();
         execute("insert into dynamic_table (id, name) values (1, 'Ford')");
         execute("refresh table dynamic_table");
 
@@ -159,7 +159,7 @@ public class ColumnPolicyIntegrationTest extends SQLTransportIntegrationTest {
         execute("create table dynamic_table (" +
                 "  meta string" +
                 ") with (column_policy='dynamic', number_of_replicas=0)");
-        ensureGreen();
+        ensureYellow();
         execute("insert into dynamic_table (new, meta) values(['a', 'b', 'c'], 'hello')");
         execute("refresh table dynamic_table");
         execute("insert into dynamic_table (new) values(['d', 'e', 'f'])");
@@ -174,7 +174,7 @@ public class ColumnPolicyIntegrationTest extends SQLTransportIntegrationTest {
     @Test
     public void testInsertDynamicObjectArray() throws Exception {
         execute("create table dynamic_table (person object(dynamic)) with (number_of_replicas=0)");
-        ensureGreen();
+        ensureYellow();
         execute("insert into dynamic_table (person) values " +
                 "({name='Ford', addresses=[{city='West Country', country='GB'}]})");
         refresh();
@@ -203,7 +203,7 @@ public class ColumnPolicyIntegrationTest extends SQLTransportIntegrationTest {
         execute("create table dynamic_table (" +
                 "  meta string" +
                 ") with (column_policy='dynamic', number_of_replicas=0)");
-        ensureGreen();
+        ensureYellow();
         execute("insert into dynamic_table (new, meta) values({a=['a', 'b', 'c'], nest={a=['a','b']}}, 'hello')");
         execute("refresh table dynamic_table");
         execute("insert into dynamic_table (new) values({a=['d', 'e', 'f']})");
@@ -225,7 +225,7 @@ public class ColumnPolicyIntegrationTest extends SQLTransportIntegrationTest {
                 "     meta object" +
                 "  )" +
                 ") with (column_policy='dynamic', number_of_replicas=0)");
-        ensureGreen();
+        ensureYellow();
         execute("insert into dynamic_table (meta) values({meta={a=['a','b']}})");
         execute("refresh table dynamic_table");
         waitNoPendingTasksOnAll();
@@ -240,7 +240,7 @@ public class ColumnPolicyIntegrationTest extends SQLTransportIntegrationTest {
         execute("create table dynamic_table (" +
                 "  my_object object " +
                 ") with (column_policy='dynamic', number_of_replicas=0)");
-        ensureGreen();
+        ensureYellow();
 
         execute("insert into dynamic_table (my_object) values ({a=['a','b']}),({b=['a']})");
         execute("refresh table dynamic_table");
@@ -263,7 +263,7 @@ public class ColumnPolicyIntegrationTest extends SQLTransportIntegrationTest {
                 "   )," +
                 "   title string" +
                 ")");
-        ensureGreen();
+        ensureYellow();
         Map<String, Object> authorMap = new HashMap<String, Object>(){{
             put("name", new HashMap<String, Object>(){{
                 put("first_name", "Douglas");
@@ -308,7 +308,7 @@ public class ColumnPolicyIntegrationTest extends SQLTransportIntegrationTest {
                 "  id integer primary key, " +
                 "  name string" +
                 ") with (column_policy='dynamic', number_of_replicas=0)");
-        ensureGreen();
+        ensureYellow();
         execute("insert into dynamic_table (id, name) values (1, 'Ford')");
         execute("refresh table dynamic_table");
 
@@ -333,7 +333,7 @@ public class ColumnPolicyIntegrationTest extends SQLTransportIntegrationTest {
                 "  id integer primary key, " +
                 "  score double" +
                 ") with (number_of_replicas=0)");
-        ensureGreen();
+        ensureYellow();
         execute("insert into dynamic_table (id, score) values (1, 42.24)");
         execute("refresh table dynamic_table");
 
@@ -360,7 +360,7 @@ public class ColumnPolicyIntegrationTest extends SQLTransportIntegrationTest {
                 "  id integer primary key, " +
                 "  score double" +
                 ") with (number_of_replicas=0)");
-        ensureGreen();
+        ensureYellow();
         execute("insert into dynamic_table (id, score) values (1, 4656234.345)");
         execute("refresh table dynamic_table");
 
@@ -386,7 +386,7 @@ public class ColumnPolicyIntegrationTest extends SQLTransportIntegrationTest {
                 "  odd boolean," +
                 "  prime boolean" +
                 ") partitioned by (odd) with (column_policy='strict', number_of_replicas=0)");
-        ensureGreen();
+        ensureYellow();
 
         GetIndexTemplatesResponse response = client().admin().indices()
                 .prepareGetTemplates(PartitionName.templateName(null, "numbers"))
@@ -422,7 +422,7 @@ public class ColumnPolicyIntegrationTest extends SQLTransportIntegrationTest {
                 "  odd boolean," +
                 "  prime boolean" +
                 ") partitioned by (odd) with (column_policy='strict', number_of_replicas=0)");
-        ensureGreen();
+        ensureYellow();
 
         GetIndexTemplatesResponse response = client().admin().indices()
                 .prepareGetTemplates(PartitionName.templateName(null, "numbers"))
@@ -458,7 +458,7 @@ public class ColumnPolicyIntegrationTest extends SQLTransportIntegrationTest {
                 "  odd boolean," +
                 "  prime boolean" +
                 ") partitioned by (odd) with (column_policy='dynamic', number_of_replicas=0)");
-        ensureGreen();
+        ensureYellow();
 
         GetIndexTemplatesResponse templateResponse = client().admin().indices()
                 .prepareGetTemplates(PartitionName.templateName(null, "numbers"))
@@ -483,7 +483,7 @@ public class ColumnPolicyIntegrationTest extends SQLTransportIntegrationTest {
 
         execute("insert into numbers (num, odd, prime, perfect) values (?, ?, ?, ?)",
                 new Object[]{28, true, false, true});
-        ensureGreen();
+        ensureYellow();
         execute("refresh table numbers");
         waitNoPendingTasksOnAll();
 
@@ -520,7 +520,7 @@ public class ColumnPolicyIntegrationTest extends SQLTransportIntegrationTest {
                 "  id integer primary key, " +
                 "  score double" +
                 ") with (number_of_replicas=0)");
-        ensureGreen();
+        ensureYellow();
         execute("alter table dynamic_table set (column_policy = 'strict')");
         waitNoPendingTasksOnAll();
         expectedException.expect(SQLActionException.class);
@@ -534,7 +534,7 @@ public class ColumnPolicyIntegrationTest extends SQLTransportIntegrationTest {
                 "  id integer primary key, " +
                 "  score double" +
                 ") with (number_of_replicas=0, column_policy='strict')");
-        ensureGreen();
+        ensureYellow();
         execute("insert into dynamic_table (id, score) values (1, 42)");
         execute("alter table dynamic_table set (column_policy = 'dynamic')");
         waitNoPendingTasksOnAll();
@@ -547,7 +547,7 @@ public class ColumnPolicyIntegrationTest extends SQLTransportIntegrationTest {
                 "  id integer, " +
                 "  score double" +
                 ") with (number_of_replicas=0)");
-        ensureGreen();
+        ensureYellow();
         execute("alter table dynamic_table set (column_policy = 'strict')");
         waitNoPendingTasksOnAll();
         MappingMetaData partitionMetaData = clusterService().state().metaData().indices()
@@ -568,7 +568,7 @@ public class ColumnPolicyIntegrationTest extends SQLTransportIntegrationTest {
                 "  id integer, " +
                 "  score double" +
                 ") partitioned by (score) with (number_of_replicas=0)");
-        ensureGreen();
+        ensureYellow();
         execute("insert into dynamic_table (id, score) values (1, 10)");
         execute("refresh table dynamic_table");
         execute("alter table dynamic_table set (column_policy = 'strict')");
@@ -591,10 +591,10 @@ public class ColumnPolicyIntegrationTest extends SQLTransportIntegrationTest {
                 "  id integer, " +
                 "  score double" +
                 ") partitioned by (score) with (number_of_replicas=0, column_policy='strict')");
-        ensureGreen();
+        ensureYellow();
         execute("insert into dynamic_table (id, score) values (1, 10)");
         execute("refresh table dynamic_table");
-        ensureGreen();
+        ensureYellow();
         execute("alter table dynamic_table set (column_policy= 'dynamic')");
         waitNoPendingTasksOnAll();
         // After changing the column_policy it's possible to add new columns to existing and new
@@ -602,7 +602,7 @@ public class ColumnPolicyIntegrationTest extends SQLTransportIntegrationTest {
         execute("insert into dynamic_table (id, score, comment) values (2,10,'this is a new column')");
         execute("insert into dynamic_table (id, score, new_comment) values (2,5,'this is a new column on a new partition')");
         execute("refresh table dynamic_table");
-        ensureGreen();
+        ensureYellow();
         GetIndexTemplatesResponse response = client().admin().indices()
                 .prepareGetTemplates(PartitionName.templateName(null, "dynamic_table"))
                 .execute().actionGet();
@@ -618,7 +618,7 @@ public class ColumnPolicyIntegrationTest extends SQLTransportIntegrationTest {
         execute("insert into dynamic_table (id, score, new_col) values (?, ?, ?)",
                 new Object[]{6, 3, "hello"});
         execute("refresh table dynamic_table");
-        ensureGreen();
+        ensureYellow();
 
         MappingMetaData partitionMetaData = clusterService().state().metaData().indices()
                 .get(new PartitionName("dynamic_table", Arrays.asList(new BytesRef("10.0"))).stringValue())
