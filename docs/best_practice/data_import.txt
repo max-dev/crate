@@ -228,6 +228,9 @@ COPY FROM Command
   cr> REFRESH TABLE user;
   REFRESH OK (... sec)
 
+  cr> delete from user;
+  DELETE OK, -1 rows affected (... sec)
+
 .. note::
 
   When importing data using ``COPY FROM`` Crate does not check if the types
@@ -253,6 +256,9 @@ For example::
 
   cr> REFRESH TABLE user;
   REFRESH OK (... sec)
+
+  cr> delete from user;
+  DELETE OK, -1 rows affected (... sec)
 
 In our example it will not make a difference, but if you have a more complex
 data set with a lot of columns and large values, it probably makes sense to
@@ -316,6 +322,10 @@ or the other column must lose its contraint.
   ... PARTITIONED BY (day_joined)
   ... WITH (number_of_replicas = 0);
   CREATE OK (... sec)
+
+.. Hidden: wait for shard initialization
+
+    cr> _ensureYellow()
 
 To import data into partitioned tables efficiently you will have to import
 each table partition separately. Since the value of the table partition is not

@@ -63,6 +63,10 @@ off::
     ... ) clustered into 5 shards with (number_of_replicas = 0);
     CREATE OK (... sec)
 
+.. Hidden: wait for initializing shards
+
+    cr> _ensureYellow()
+
 For fields that contain text consider using a full-text analyzer. This will
 enable great full-text search capabilities. See :ref:`indices_and_fulltext` for
 more information on that.

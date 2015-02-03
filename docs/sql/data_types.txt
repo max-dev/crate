@@ -107,6 +107,10 @@ fractions. Example::
     ... );
     CREATE OK (... sec)
 
+.. Hidden: wait for shard initialization
+
+    cr> _ensureYellow()
+
 ::
 
     cr> insert into my_table4 (id, first_column)
