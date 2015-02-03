@@ -5,6 +5,8 @@ Changes for Crate
 Unreleased
 ==========
 
+ - Support `INSERT ... ON DUPLICATE KEY UPDATE` statement
+
  - Fix: Filtering on a routing column sometimes didn't work if the value was an
    empty string
 
